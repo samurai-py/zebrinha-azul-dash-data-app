@@ -22,7 +22,7 @@ executing==2.0.0
 Flask==2.2.5
 idna==3.4
 importlib-metadata==6.7.0
-ipykernel==6.25.2
+ipykernel==6.16.1
 ipython==8.16.1
 itsdangerous==2.1.2
 jedi==0.19.1
