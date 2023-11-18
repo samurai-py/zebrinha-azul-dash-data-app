@@ -32,7 +32,7 @@ df = df_raw.loc[df_raw['name'] != 'Recife'].reset_index(drop=True)
 
 df_ptbr_full = df.copy()
 df_ptbr = df_ptbr_full.sort_values('created_at', ascending=False)
-df_ptbr.drop(columns=['record_id', 'id','lat', 'lon', 'location_id'], inplace=True)
+df_ptbr.drop(columns=['record_id', 'id','lat', 'lon', 'location_id', 'updated_at', 'row_num'], inplace=True)
 df_ptbr.rename(columns=cols_ptbr, inplace=True)
 
 layout = dbc.Container([
