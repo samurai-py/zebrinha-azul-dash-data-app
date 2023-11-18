@@ -6,7 +6,7 @@ dash.register_page(__name__, path='/')
 
 with open('assets/zebra.md', 'r', encoding='utf-8') as f:
     markdown_text = f.read()
-
+    
 layout = dbc.Container([
     dbc.Row([
         dbc.Col([

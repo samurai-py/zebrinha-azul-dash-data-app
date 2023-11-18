@@ -155,7 +155,7 @@ def update_location_name(value):
 )
 def update_first_location_info(selected_location):
     
-    selected_row = df_temp[df_temp['name'] == selected_location].sort_values('record_id', ascending=False).iloc[0]
+    selected_row = df_temp[df_temp['name'] == selected_location].sort_values('created_at', ascending=False).iloc[0]
     
     precip_mm = [html.Strong(selected_row['precip_mm'])]
     humidity = [html.Strong(selected_row['humidity'])]
@@ -176,7 +176,7 @@ def update_first_location_info(selected_location):
 )
 def update_first_location_info(selected_location):
     
-    selected_row = df_temp[df_temp['name'] == selected_location].sort_values('record_id', ascending=False).iloc[0]
+    selected_row = df_temp[df_temp['name'] == selected_location].sort_values('created_at', ascending=False).iloc[0]
     
     precip_mm = [html.Strong(selected_row['precip_mm'])]
     humidity = [html.Strong(selected_row['humidity'])]
@@ -200,7 +200,7 @@ def update_trip_info(origin, destination):
     if origin == destination:
         return ["Origem: ", "Destino: ", "Distância: ", "Tempo estimado: "]
     
-    selected_row = df_routes[(df_routes['origin'] == origin) & (df_routes['destination'] == destination)].sort_values('record_id', ascending=False).iloc[0]
+    selected_row = df_routes[(df_routes['origin'] == origin) & (df_routes['destination'] == destination)].sort_values('created_at', ascending=False).iloc[0]
     origin_info = ["Origem: ", html.Strong(selected_row['origin'])]
     destination_info = ["Destino: ", html.Strong(selected_row['destination'])]
     distance_info = ["Distância: ", html.Strong(selected_row['distance'])]
