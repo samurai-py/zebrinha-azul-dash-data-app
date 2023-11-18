@@ -17,12 +17,24 @@ from data.query import get_dash_dataframe
 
 dash.register_page(__name__)
 
+with urlopen('https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-35-mun.json') as response:
+    geojson = json.load(response)
+    
+with open('utils/weather_cols_pt-br.json', encoding='utf-8') as f:
+    cols_ptbr = json.load(f)['translations']
+
 df_raw = get_dash_dataframe('forecast')
 
 df = df_raw.loc[df_raw['name'] != 'Recife'].reset_index(drop=True)
 
-with urlopen('https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-35-mun.json') as response:
-    geojson = json.load(response)
+print(cols_ptbr)
+
+df_ptbr = df.copy()
+df_ptbr.drop(columns=['record_id', 'lat', 'lon', 'location_id'], inplace=True)
+df_ptbr.rename(columns=cols_ptbr, inplace=True)
+
+print(df_ptbr)
+
 
 layout = dbc.Container([
     dbc.Row([
@@ -55,7 +67,7 @@ layout = dbc.Container([
             dcc.Graph(id='gauge-plot', figure={}),
             dash_table.DataTable(
                 id='table',
-                columns=[{"name": i, "id": i} for i in df.columns],
+                columns=[{"name": i, "id": i} for i in df_ptbr.columns],
                 style_table={'overflowX': 'auto'}
             ),
         ], md=5),
@@ -126,7 +138,7 @@ def update_gauge_plot(selected_location):
     [Input('location-dropdown', 'value')]
 )
 def update_table(selected_location):
-    filtered_df = df[df['name'] == selected_location]
+    filtered_df = df_ptbr[df_ptbr['Cidade'] == selected_location]
     return filtered_df.to_dict('records')
 
 @dash.callback(
