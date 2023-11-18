@@ -30,8 +30,9 @@ df_raw = get_dash_dataframe('forecast')
 
 df = df_raw.loc[df_raw['name'] != 'Recife'].reset_index(drop=True)
 
-df_ptbr = df.copy()
-df_ptbr.drop(columns=['record_id', 'lat', 'lon', 'location_id'], inplace=True)
+df_ptbr_full = df.copy()
+df_ptbr = df_ptbr_full.sort_values('record_id', ascending=False)
+df_ptbr.drop(columns=['record_id', 'id','lat', 'lon', 'location_id'], inplace=True)
 df_ptbr.rename(columns=cols_ptbr, inplace=True)
 
 layout = dbc.Container([
@@ -74,6 +75,8 @@ layout = dbc.Container([
                 dash_table.DataTable(
                     id='table',
                     columns=[{"name": i, "id": i} for i in df_ptbr.columns],
+                    page_size=10,
+                    sort_action='native',
                     style_table={'overflowX': 'auto'}
                 ),
             ], style={'marginTop': '20px'}),
