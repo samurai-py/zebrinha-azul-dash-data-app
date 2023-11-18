@@ -31,7 +31,7 @@ df_raw = get_dash_dataframe('forecast')
 df = df_raw.loc[df_raw['name'] != 'Recife'].reset_index(drop=True)
 
 df_ptbr_full = df.copy()
-df_ptbr = df_ptbr_full.sort_values('record_id', ascending=False)
+df_ptbr = df_ptbr_full.sort_values('created_at', ascending=False)
 df_ptbr.drop(columns=['record_id', 'id','lat', 'lon', 'location_id'], inplace=True)
 df_ptbr.rename(columns=cols_ptbr, inplace=True)
 
@@ -132,7 +132,7 @@ def update_map_plot(selected_location):
     [Input('location-dropdown', 'value')]
 )
 def update_gauge_plot(selected_location):
-    selected_row = df[df['name'] == selected_location].sort_values('record_id', ascending=False)
+    selected_row = df[df['name'] == selected_location].sort_values('created_at', ascending=False)
     value = selected_row['temp_c'].values[0]
     fig = go.Figure(go.Indicator(
         mode = "gauge+number",
@@ -160,7 +160,7 @@ def update_table(selected_location):
     [Input('location-dropdown', 'value')]
 )
 def update_card_info(selected_location):
-    selected_row = df[df['name'] == selected_location].sort_values('record_id', ascending=False).iloc[0]
+    selected_row = df[df['name'] == selected_location].sort_values('created_at', ascending=False).iloc[0]
     precip_mm = ['Precipitação (mm): ', html.Strong(selected_row['precip_mm'])]
     humidity = ['Umidade (%): ', html.Strong(selected_row['humidity'])]
     condition = ['Condição do Clima: ', html.Strong(selected_row['condition'])]
@@ -173,7 +173,7 @@ def update_card_info(selected_location):
     [Input('location-dropdown', 'value')]
 )
 def update_icon(selected_location):
-    selected_row = df[df['name'] == selected_location].sort_values('record_id', ascending=False).iloc[0]
+    selected_row = df[df['name'] == selected_location].sort_values('created_at', ascending=False).iloc[0]
     is_day = selected_row['is_day']
     if is_day:
         return '/assets/sol.svg'

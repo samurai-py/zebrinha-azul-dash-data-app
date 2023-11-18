@@ -6,7 +6,7 @@ dash.register_page(__name__, path='/')
 
 with open('assets/zebra.md', 'r', encoding='utf-8') as f:
     markdown_text = f.read()
-
+    
 layout = dbc.Container([
     dbc.Row([
         dbc.Col([
@@ -14,8 +14,8 @@ layout = dbc.Container([
                 dbc.CardBody([
                     dcc.Markdown(markdown_text)
                 ])
-            ], style={'width': '50rem'})  
+            ], className='w-100')  # Adiciona a classe w-100 aqui
             
         ], className='d-flex justify-content-center')
     ])
-], className='d-flex justify-content-center', fluid=True)
+], className='d-flex justify-content-center', fluid=True, style={'width': '80%', 'height': '100%'})
