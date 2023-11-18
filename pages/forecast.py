@@ -4,6 +4,7 @@ from dash import html
 from dash import dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+from dash_bootstrap_templates import load_figure_template
 
 from urllib.request import urlopen
 import json
@@ -17,12 +18,21 @@ from data.query import get_dash_dataframe
 
 dash.register_page(__name__)
 
+load_figure_template('bootstrap')
+
+with urlopen('https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-35-mun.json') as response:
+    geojson = json.load(response)
+    
+with open('utils/weather_cols_pt-br.json', encoding='utf-8') as f:
+    cols_ptbr = json.load(f)['translations']
+
 df_raw = get_dash_dataframe('forecast')
 
 df = df_raw.loc[df_raw['name'] != 'Recife'].reset_index(drop=True)
 
-with urlopen('https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-35-mun.json') as response:
-    geojson = json.load(response)
+df_ptbr = df.copy()
+df_ptbr.drop(columns=['record_id', 'lat', 'lon', 'location_id'], inplace=True)
+df_ptbr.rename(columns=cols_ptbr, inplace=True)
 
 layout = dbc.Container([
     dbc.Row([
@@ -52,17 +62,22 @@ layout = dbc.Container([
             ], style={'height': '100%'}),        
         ], md=2),
         dbc.Col([
-            dcc.Graph(id='gauge-plot', figure={}),
-            dash_table.DataTable(
-                id='table',
-                columns=[{"name": i, "id": i} for i in df.columns],
-                style_table={'overflowX': 'auto'}
-            ),
-        ], md=5),
-        dbc.Col([
-            dcc.Graph(id='map-plot', figure={},
-                      style={'height': '100%'}),
-        ], md=5),
+            dbc.Row([
+                dbc.Col([
+                    dcc.Graph(id='gauge-plot', figure={}),
+                ]),
+                dbc.Col([
+                    dcc.Graph(id='map-plot', figure={}, style={'height': '100%'}),
+                ])
+            ]),
+            dbc.Row([
+                dash_table.DataTable(
+                    id='table',
+                    columns=[{"name": i, "id": i} for i in df_ptbr.columns],
+                    style_table={'overflowX': 'auto'}
+                ),
+            ], style={'marginTop': '20px'}),
+        ], md=10),
     ]),
 ], fluid=True)
 
@@ -82,14 +97,18 @@ def update_map_plot(selected_location):
         selected_row,
         geojson=geojson,
         featureidkey='properties.name',
+        title='Mapa de Temperatura',
         locations='name',
         color='temp_c',
         hover_name='name',
         zoom=6.5,
         center=dict(lat=-22.966224, lon=-45.465454),
         opacity=0.5,
+        color_continuous_scale=px.colors.sequential.Plasma,
+        labels={'temp_c':'°C'} 
     )
     fig.update_layout(
+        title_x=0.5,
         mapbox_style="white-bg",
         mapbox_layers=[
             {
@@ -115,7 +134,7 @@ def update_gauge_plot(selected_location):
     fig = go.Figure(go.Indicator(
         mode = "gauge+number",
         value = value,
-        title = {'text': "Temperatura"},
+        title = {'text': "Termômetro"},
         gauge = {'axis': {'range': [None, 60]}}
     ))
     return fig
@@ -126,7 +145,7 @@ def update_gauge_plot(selected_location):
     [Input('location-dropdown', 'value')]
 )
 def update_table(selected_location):
-    filtered_df = df[df['name'] == selected_location]
+    filtered_df = df_ptbr[df_ptbr['Cidade'] == selected_location]
     return filtered_df.to_dict('records')
 
 @dash.callback(

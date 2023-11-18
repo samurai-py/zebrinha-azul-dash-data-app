@@ -1,0 +1,22 @@
+{
+    "translations": {
+      "name": "Cidade",
+      "region": "Estado",
+      "country": "País",
+      "tz_id": "Fuso Horário",
+      "condition": "Clima",
+      "temp_c": "Temperatura °C",
+      "temp_f": "Temperatura °F",
+      "is_day": "Horário",
+      "wind_mph": "Vel. Vento/mph",
+      "pressure_mb": "Pressão Atm.",
+      "precip_mm": "Precipitação",
+      "humidity": "Umidade",
+      "cloud": "Nuvens",
+      "feelslike_c": "S. Térmica °C",
+      "feelslike_f": "S. Térmica °F",
+      "created_at": "Registrado em",
+      "updated_at": "Atualizado em"
+    }
+  }
+  
