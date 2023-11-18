@@ -66,10 +66,10 @@ layout = dbc.Container([
             dbc.Row([
                 dbc.Col([
                     dcc.Graph(id='gauge-plot', figure={}),
-                ]),
+                ], md=6),
                 dbc.Col([
                     dcc.Graph(id='map-plot', figure={}, style={'height': '100%'}),
-                ])
+                ], md=6)
             ]),
             dbc.Row([
                 dash_table.DataTable(
